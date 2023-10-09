@@ -1,42 +1,82 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    
+ <%@ page import="model.Numero" %>
+ <%@ page import="javax.servlet.http.HttpSession" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Adivina el número</title>
+<meta charset="UTF-8">
+<title>Adivina Numero</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 <body>
-    <h1>Adivina el número entre 1 y 100</h1>
-    
-    <% 
-    int numeroSecreto = (int)(Math.random() * 100) + 1;
-    
-    int intentos = 10;
-    
-    String mensaje = "";
-    if (request.getParameter("numero") != null) {
-        int numero = Integer.parseInt(request.getParameter("numero"));
-        if (numero == numeroSecreto) {
-            mensaje = "¡Felicidades! Has adivinado el número.";
-        } else if (numero < numeroSecreto) {
-            mensaje = "El número secreto es más alto. Intenta de nuevo.";
-            intentos--;
 
-        } else {
-            mensaje = "El número secreto es más bajo. Intenta de nuevo.";
-            intentos--;
+<%! StringBuilder mostrar = new StringBuilder(""); %>
+<%
+session = request.getSession(true);
 
-        }
+if (request.getParameter("numero") != null) {
+    int numero = Integer.parseInt(request.getParameter("numero"));
+    Numero n1 = new Numero();
+
+    if (request.getParameter("enviar") != null) {
+        n1.introducirCalculos(numero, mostrar);
+        session.setAttribute("mostrar", mostrar.toString());
     }
-    %>
+}
 
-    <p><%= mensaje %></p>
-    
-    <p>Intentos restantes: <%= intentos %></p>
-    
-    <form action ="index.jsp" method="get">
-        <input type="number" name="numero">
-        <input type="submit" value="Adivinar">
-    </form>
+// Obtener el valor de 'mostrar' desde la sesi�n
+String mostrarValue = (String) session.getAttribute("mostrar");
+if (mostrarValue != null) {
+    mostrar = new StringBuilder(mostrarValue);
+}
+
+%>
+
+
+
+
+
+
+
+<form method="post" action="index.jsp">
+<div class="row">
+</div>
+<div class="row">
+<div class="col-md-4">
+</div>
+<div class="col-md-4">
+<div class="panel panel-primary">
+ <div class="panel-heading">Adivina numero</div>
+ <div class="panel-body">
+ <div class="input-group">
+ <label class="input-group-addon">Pista</label>
+ <input type="text" class="form-control" name="resultado" id="resultado" value="<%out.print(mostrar); %>" aria-describedby="basic-addon3">
+ </div>
+ <br>
+ <div class="input-group">
+ <label class="input-group-addon" >Elige un numero</label>
+ <input type="number" class="form-control" name="numero" id="numero">
+ </div>
+ <div class="btn-group btn-group-justified" role="group" aria-label="...">
+  <div class="btn-group" role="group">
+	  
+	<br>
+
+ </div>
+ </div>
+<br>
+
+ <button type="submit" class="btn btn-primary btn-lg btn-block" id="enviar" name="enviar" value="enviar">Enviar</button>
+
+ </div>
+ </div>
+</div>
+</div>
+</form>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+ 
 </body>
 </html>
